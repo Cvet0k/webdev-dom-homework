@@ -9,10 +9,10 @@
 
 
 <body>
- 
+
   <div class="container">
     <ul class="comments" id="list-coments">
- <!--  Выводиться из JS -->
+      <!--  Выводиться из JS -->
     </ul>
     <form id="add-form" class="add-form">
       <input type="text" class="add-form-name" placeholder="Введите ваше имя" id="input-name" />
@@ -36,27 +36,34 @@
   const inputTextEl = document.getElementById('input-text');
   const formEl = document.getElementById('add-form');
   const delButtonEl = document.getElementById('del-button');
+  let id = 2;
+
 
   const commentsContaner = [
-      {
-         name: 'Глеб Фокин',
-         date: '12.02.22 12:18',
-          text: "Это будет первый комментарий на этой странице",
-          like: false,
-         quantityLike: 3,
-      },
-      {
-         name: 'Варвара Н',
-         date: '13.02.22 19:22',
-          text: "Мне нравится как оформлена эта страница! ❤",
-          like: false,
-         quantityLike: 75,
-      },
-      ];
+    {
+      name: 'Глеб Фокин',
+      date: '12.02.22 12:18',
+      text: "Это будет первый комментарий на этой странице",
+      like: false,
+      id: 0,
+      quantityLike: 3,
+    },
+    {
+      name: 'Варвара Н',
+      date: '13.02.22 19:22',
+      text: "Мне нравится как оформлена эта страница! ❤",
+      like: false,
+      id: 1,
+      quantityLike: 75,
+    },
+  ];
 
-      const renderComents = () => {
-       const commentHTML = commentsContaner.map((coment)=> {
-          return `<li class="comment">
+  function likeClick(e) {
+    e.currentTarget.classList.toggle('active-like');
+
+  }
+  function renderComent(coment) {
+    return `<li class="comment">
           <div class="comment-header">
             <div>${coment.name}</div>
             <div>${coment.date}</div>
@@ -67,19 +74,27 @@
             </div>
           </div>
           <div class="comment-footer">
-            <div class="likes">
+            <div class="likes" >
               <span class="likes-counter">${coment.quantityLike}</span>
-              <button class="like-button"></button>
+              <button class="like-button ${coment.like ? "active-like" : ''}"></button>
             </div>
           </div>
         </li>`;
-           }).join(' ') ;
-           console.log(commentHTML);
-           listComentsEl.innerHTML = commentHTML;
-        }
-        renderComents();
-        
- 
+  }
+  const renderComents = () => {
+    const commentHTML = commentsContaner.map((coment) => {
+      return `<div data-id=${coment.id}> ${renderComent(coment)} </div>`
+
+    }).join(' ');
+
+    listComentsEl.innerHTML = commentHTML;
+  }
+  renderComents();
+  document.body.querySelectorAll('.like-button').forEach((el) => {
+    el.addEventListener('click', likeClick);
+  })
+
+
   function rusDateTime() {
     let myDate = new Date();
     let day = myDate.getDate();
@@ -98,32 +113,32 @@
     let userTime = [hoursUser, minutaUser];
     return userDate.join('.') + ' ' + userTime.join(':');
   }
-  
-  
-  formEl.addEventListener('submit', (clickUser ));
-  inputTextEl.addEventListener('keyup', (handleInput ));
-  delButtonEl.addEventListener('click', (deletekUser ));
+
+
+  formEl.addEventListener('submit', (clickUser));
+  inputTextEl.addEventListener('keyup', (handleInput));
+  delButtonEl.addEventListener('click', (deleteUser));
 
   inputTextEl.addEventListener('keyup', (cleanState));
   inputNameEl.addEventListener('keyup', (cleanState));
 
-  function cleanState () {
+  function cleanState() {
     inputNameEl.classList.remove('error');
     inputTextEl.classList.remove('error');
     addButtonEl.classList.remove('error-button');
   }
 
-  function handleInput (e) {
-        if (e.keyCode === 13 ) {
+  function handleInput(e) {
+    if (e.keyCode === 13) {
       clickUser(e);
 
-    } 
+    }
   }
-  
+
   function clickUser(e) {
-   e.preventDefault();
-   cleanState();
-    
+    e.preventDefault();
+    cleanState();
+
     if (inputNameEl.value === '' || inputNameEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       addButtonEl.classList.add('error-button');
@@ -134,34 +149,30 @@
       addButtonEl.classList.add('error-button');
       return;
     }
-   
+
     const oldListComents = listComentsEl.innerHTML;
-    listComentsEl.innerHTML = oldListComents + `<li class="comment">
-          <div class="comment-header">
-            <div>${inputNameEl.value}</div>
-            <div>${rusDateTime()}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${inputTextEl.value}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>`
-        inputNameEl.value = '';
-        inputTextEl.value = '';
+    const coment = {
+      id: id,
+      name: inputNameEl.value,
+      date: rusDateTime(),
+      text: inputTextEl.value,
+      like: false,
+      quantityLike: 0,
+    }
+    listComentsEl.innerHTML = oldListComents + `<div data-id=${coment.id}> ${renderComent(coment)} </div>`
+    inputNameEl.value = '';
+    inputTextEl.value = '';
+    document.body.querySelectorAll('.like-button').forEach((el) => {
+      el.addEventListener('click', likeClick);
+    })
+
   }
- 
-function deletekUser () {
-  let index = listComentsEl.innerHTML.lastIndexOf('<li class="comment">');
+
+  function deleteUser() {
+    let index = listComentsEl.innerHTML.lastIndexOf('<li class="comment">');
     listComentsEl.innerHTML = listComentsEl.innerHTML.slice(0, index);
-  
-}
+
+  }
   console.log(addButtonEl);
   console.log(listComentsEl.innerHTML);
   console.log("It works!");
