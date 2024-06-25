@@ -1,71 +1,162 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Проект "Комменты"</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
 
-  <body>
-    <div class="container">
-      <ul class="comments">
-        <li class="comment">
+<head>
+  <title>Проект "Комменты"</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+
+<body>
+ 
+  <div class="container">
+    <ul class="comments" id="list-coments">
+      <li class="comment">
+        <div class="comment-header">
+          <div>Глеб Фокин</div>
+          <div>12.02.22 12:18</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Это будет первый комментарий на этой странице
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">3</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>
+      <li class="comment">
+        <div class="comment-header">
+          <div>Варвара Н.</div>
+          <div>13.02.22 19:22</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Мне нравится как оформлена эта страница! ❤
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">75</span>
+            <button class="like-button -active-like"></button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <form id="add-form" class="add-form">
+      <input type="text" class="add-form-name" placeholder="Введите ваше имя" id="input-name" />
+      <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"
+        id="input-text"></textarea>
+      <div class="add-form-row">
+        <button type="submit" class="add-form-button" id="add-button">Написать</button>
+      </div>
+      <div class="add-form-row">
+        <button type="button" class="add-form-button" id="del-button">Удалить последний комментарий</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+<script>
+  "use strict";
+  const addButtonEl = document.getElementById('add-button');
+  const listComentsEl = document.getElementById('list-coments');
+  const inputNameEl = document.getElementById('input-name');
+  const inputTextEl = document.getElementById('input-text');
+  const formEl = document.getElementById('add-form');
+  const delButtonEl = document.getElementById('del-button');
+
+ 
+  function rusDateTime() {
+    let myDate = new Date();
+    let day = myDate.getDate();
+    let deyUser;
+    day < 10 ? deyUser = '0' + day : deyUser = day;
+    let month = myDate.getMonth();
+    let monthUser;
+    month < 10 ? monthUser = '0' + (month + 1) : monthUser = month + 1;
+    let hours = myDate.getHours();
+    let hoursUser;
+    hours < 10 ? hoursUser = '0' + hours : hoursUser = hours;
+    let minuta = myDate.getMinutes();
+    let minutaUser;
+    minuta < 10 ? minutaUser = '0' + minuta : minutaUser = minuta;
+    let userDate = [deyUser, monthUser, myDate.getFullYear()];
+    let userTime = [hoursUser, minutaUser];
+    return userDate.join('.') + ' ' + userTime.join(':');
+  }
+  
+  
+  formEl.addEventListener('submit', (clickUser ));
+  inputTextEl.addEventListener('keyup', (handleInput ));
+  delButtonEl.addEventListener('click', (deletekUser ));
+
+  inputTextEl.addEventListener('keyup', (cleanState));
+  inputNameEl.addEventListener('keyup', (cleanState));
+
+  function cleanState () {
+    inputNameEl.classList.remove('error');
+    inputTextEl.classList.remove('error');
+    addButtonEl.classList.remove('error-button');
+  }
+
+  function handleInput (e) {
+        if (e.keyCode === 13 ) {
+      clickUser(e);
+
+    } 
+  }
+  
+  function clickUser(e) {
+   e.preventDefault();
+   cleanState();
+    
+    if (inputNameEl.value === '' || inputNameEl.value.trim() === '') {
+      inputNameEl.classList.add('error');
+      addButtonEl.classList.add('error-button');
+      return;
+    }
+    if (inputTextEl.value === '' || inputTextEl.value.trim() === '') {
+      inputTextEl.classList.add('error');
+      addButtonEl.classList.add('error-button');
+      return;
+    }
+   
+    const oldListComents = listComentsEl.innerHTML;
+    listComentsEl.innerHTML = oldListComents + `<li class="comment">
           <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
+            <div>${inputNameEl.value}</div>
+            <div>${rusDateTime()}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
-              Это будет первый комментарий на этой странице
+              ${inputTextEl.value}
             </div>
           </div>
           <div class="comment-footer">
             <div class="likes">
-              <span class="likes-counter">3</span>
+              <span class="likes-counter">0</span>
               <button class="like-button"></button>
             </div>
           </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <div class="add-form">
-        <input
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea
-          type="textarea"
-          class="add-form-text"
-          placeholder="Введите ваш коментарий"
-          rows="4"
-        ></textarea>
-        <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
-        </div>
-      </div>
-    </div>
-  </body>
+        </li>`
+        inputNameEl.value = '';
+        inputTextEl.value = '';
+  }
+ 
+function deletekUser () {
+  let index = listComentsEl.innerHTML.lastIndexOf('<li class="comment">');
+    listComentsEl.innerHTML = listComentsEl.innerHTML.slice(0, index);
+  
+}
+  console.log(addButtonEl);
+  console.log(listComentsEl.innerHTML);
+  console.log("It works!");
 
-  <script>
-    "use strict";
-    // Код писать здесь
-    console.log("It works!");
-  </script>
+</script>
+
 </html>
