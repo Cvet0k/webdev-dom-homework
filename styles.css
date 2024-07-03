@@ -151,6 +151,20 @@ body {
     opacity: 0.9;
   }
 
+  .save-form-button {
+    margin-top: 24px;
+    font-size: 24px;
+    padding: 10px 20px;
+    background-color: #bcec30;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+  }
+
+  .save-form-button:hover {
+    opacity: 0.9;
+  }
+
 .error {
   background-color: orangered;
 }

@@ -74,7 +74,36 @@
 
 
   }
+  function editClick (e) {
+    const id = e.currentTarget.dataset.id
+    const comment = commentsList.find(c => c.id === Number.parseInt(id));
+    comment.isEdit = !comment.isEdit;
+    renderComents();
+  }
+  function saveClick (e) {
+    const id = e.currentTarget.dataset.id
+    const comment = commentsList.find(c => c.id === Number.parseInt(id));
+    comment.isEdit = false;
+    const text = document.body.querySelector(`#edit-text[data-id="${id}"]`).value;
+    comment.text = text;
+    renderComents();
+  }
   function renderComent(comment) {
+    if (comment.isEdit) {
+      return `<div id="edit-form" class="add-form">
+      <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.date}</div>
+          </div>
+      <textarea data-id=${comment.id} type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"
+        id="edit-text">${comment.text}</textarea>
+      <div class="add-form-row">
+        <button data-id=${comment.id} type="submit" class="save-form-button" id="save-button">Сохранить</button>
+      </div>
+      
+    </div> `
+      
+    }
     return `<li class="comment">
           <div class="comment-header">
             <div>${comment.name}</div>
@@ -91,7 +120,7 @@
               <button data-id=${comment.id} class="like-button ${comment.like ? "active-like" : ''}"></button>
              
             </div>
-            <button type="submit" class="edit-form-button" >Редактировать</button>
+            <button data-id=${comment.id} type="submit" class="edit-form-button" >Редактировать</button>
           </div>
         </li>`;
   }
@@ -104,6 +133,12 @@
     listComentsEl.innerHTML = commentHTML;
     document.body.querySelectorAll('.like-button').forEach((el) => {
       el.addEventListener('click', likeClick);
+    })
+    document.body.querySelectorAll('.edit-form-button').forEach((el) => {
+      el.addEventListener('click', editClick);
+    })
+    document.body.querySelectorAll('.save-form-button').forEach((el) => {
+      el.addEventListener('click', saveClick);
     })
   }
   renderComents();
@@ -173,6 +208,7 @@
       text: inputTextEl.value,
       like: false,
       quantityLike: 0,
+      isEdit: false,
     }
     commentsList.push(coment);
     renderComents();
